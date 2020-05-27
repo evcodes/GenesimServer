@@ -7,28 +7,34 @@ let FormResponse = require('../../models/formResponse.model');
 // @desc    Get All Posts
 // @access  Public
 router.get('/', (req, res) => {
+    console.log("Get request has reached the API")
     FormResponse.find()
       .then(responses => res.json(responses));
 });
 
-// @route   POST api/forum
+// @route   POST api/formResponse
 // @desc    Create An Item
 // @access  Public
 router.post('/', (req, res) => {
     
     // make a new post with the form data submitted
-    let formResponse = new Form({
+
+    var responseInstance = new FormResponse ({
         originCountry: req.body.originCountry,
         skinCol: req.body.skinCol,
-        hairText: req.body.hariText,
+        hairText: req.body.hairText,
         noseSize: req.body.noseSize,
         noseShape: req.body.noseShape,
         lipShape: req.body.lipShape,
         lipColor: req.body.lipColor,
         sex: req.body.sex
-    });
+    })
     
-    formResponse.save().then(item => res.json(item));
+    responseInstance.save().then(response => {
+        res.status(200).json({'response': response})
+    }).catch(err => {
+        res.status(400).send("adding new form response failed.");
+    })
 });
 
 // @route   GET api/forum/postID
